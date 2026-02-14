@@ -4,5 +4,23 @@ services:
       context: .
       dockerfile: app.Dockerfile
     container_name: app
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
     volumes:
       - ./app:/app
+      - ./requirements.txt:/requirements.txt
+  db:
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    container_name: db
+    env_file:
+      - db/.env
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/eternal:/var/lib/postgresql
+volumes:
+  eternal:
