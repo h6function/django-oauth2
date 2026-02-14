@@ -6,3 +6,4 @@ services:
     container_name: app
     volumes:
       - ./app:/app
+      - ./requirements.txt:/requirements.txt
