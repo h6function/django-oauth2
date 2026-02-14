@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: app.Dockerfile
     container_name: app
+    ports:
+      - 8000:8000
     volumes:
       - ./app:/app
       - ./requirements.txt:/requirements.txt
