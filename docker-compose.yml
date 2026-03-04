@@ -6,6 +6,8 @@ services:
     container_name: app
     depends_on:
       - db
+    environment:
+      - AUTHLIB_INSECURE_TRANSPORT=true
     ports:
       - 8000:8000
     volumes:
@@ -18,9 +20,16 @@ services:
     container_name: db
     env_file:
       - db/.env
-    ports:
-      - 5432:5432
     volumes:
       - ./db/eternal:/var/lib/postgresql
+  sample-sp:
+    build:
+      context: .
+      dockerfile: sample-sp.Dockerfile
+    container_name: sample-sp
+    ports:
+      - 3000:3000
+    volumes:
+      - ./sample-sp:/sample-sp
 volumes:
   eternal:

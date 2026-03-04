@@ -84,15 +84,19 @@ class OAuth2AuthorizationCode(Model, AuthorizationCodeMixin):
     scope = TextField(default='', null=True)
     auth_time = IntegerField(null=False, default=now_timestamp)
 
-    def is_expired(self):
-        return self.auth_time + 300 < time.time()
-
     def get_redirect_uri(self):
         return self.redirect_uri
 
     def get_scope(self):
         return self.scope or ''
 
+    # Extended:
+    # https://docs.authlib.org/en/latest/django/2/grants.html#authorization-code-grant
+    def is_expired(self):
+        return self.auth_time + 300 < time.time()
+
+    # Extended:
+    # https://docs.authlib.org/en/latest/django/2/grants.html#authorization-code-grant
     def get_auth_time(self):
         return self.auth_time
 
@@ -108,8 +112,8 @@ class OAuth2Token(Model, TokenMixin):
     issued_at = IntegerField(null=False, default=now_timestamp)
     expires_in = IntegerField(null=False, default=0)
 
-    def get_client_id(self):
-        return self.client_id
+    def check_client(self, client):
+        return self.client_id == client.client_id
 
     def get_scope(self):
         return self.scope
@@ -117,5 +121,24 @@ class OAuth2Token(Model, TokenMixin):
     def get_expires_in(self):
         return self.expires_in
 
+    def is_expired(self):
+        return self.get_expires_at() < time.time()
+
+    def is_revoked(self):
+        return self.revoked
+
+    def get_user(self):
+        return self.user
+
+    def get_client(self):
+        return OAuth2Client.objects.get(client_id=self.client_id)
+
+    # Extended:
+    # https://docs.authlib.org/en/latest/django/2/authorization-server.html#token
+    # def get_client_id(self):
+    #     return self.client_id
+
+    # Extended:
+    # https://docs.authlib.org/en/latest/django/2/authorization-server.html#token
     def get_expires_at(self):
         return self.issued_at + self.expires_in

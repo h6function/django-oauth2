@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authorize</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Authorize access to your account</h1>
+        <p>
+            The application <strong>{{ grant.client.client_name }}</strong> is requesting access to your account.
+        </p>
+        <div class="scopes">
+            <p>Requested scopes:</p>
+            <ul>
+                {% for scope in scopes %}
+                    <li>{{ scope }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <form method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <div class="buttons">
+                <button type="submit" name="authorize">Authorize</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

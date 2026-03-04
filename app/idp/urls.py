@@ -16,7 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from auth import views as auth_views
+from idp_resource import views as resource_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('oauth/authorize/', auth_views.authorize, name='authorize'),
+    path('oauth/token/', auth_views.issue_token, name='issue_token'),
+    path('user/email/', resource_views.user_email, name='user_email'),
+    path('user/name/', resource_views.user_name, name='user_name'),
 ]
